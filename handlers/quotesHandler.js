@@ -4,7 +4,7 @@
 
 const database = require('./../database');
 const helper = require('./../helper');
-const TYRANT_NAMES = process.env.TYRANTS || 'Josef Stalin';
+const AUTHOR_CLASS = process.env.AUTHOR_CLASS || 'dictator';
 
 function _getRandomQuote(authorKeys) {
     const idx = Math.floor(Math.random() * authorKeys.length);
@@ -13,8 +13,7 @@ function _getRandomQuote(authorKeys) {
 
 module.exports = {
     getQuote(args, resolve, reject) {
-        var authors = TYRANT_NAMES.split(',');
-        database.getQuoteKeys(authors).then((authorKeys) => {
+        database.getQuoteKeysByClass(AUTHOR_CLASS).then((authorKeys) => {
             var quoteInfo = _getRandomQuote(authorKeys);
             database.getQuote(quoteInfo.id, quoteInfo.author).then((quote) => {
                 resolve({status: 1, type: 'text', message: helper.formatMessage('', quote.quote, quote.author)});

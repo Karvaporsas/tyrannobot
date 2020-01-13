@@ -3,6 +3,7 @@
 'use strict';
 
 const T_QUOTES = process.env.TABLE_QUOTES;
+const utils = require('./../utils');
 
 module.exports = {
     getQuoteKeys(dynamoDb, authors) {
@@ -20,6 +21,31 @@ module.exports = {
                 resolve(allKeys);
             }).catch((e) => {
                 console.log('Error getting quote keys');
+                console.log(e);
+                reject(e);
+            });
+        });
+    },
+    getQuoteKeysByClass(dynamoDb, authorClass) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                ProjectionExpression: '#id, #author',
+                FilterExpression: '#telegram_bot_category = :telegram_bot_category',
+                ExpressionAttributeNames: {
+                    '#id': 'id',
+                    '#author': 'author',
+                    '#telegram_bot_category': 'telegram_bot_category'
+                },
+                ExpressionAttributeValues: {
+                    ':telegram_bot_category': authorClass
+                }
+            };
+
+            utils.performScan(dynamoDb, params).then((quoteKeys) => {
+                resolve(quoteKeys);
+            }).catch((e) => {
+                console.log('Error scanning quotes');
                 console.log(e);
                 reject(e);
             });

@@ -17,7 +17,7 @@ Variable name | Value | Note
 **DEBUG_MODE** | ON / OFF | Increases amount of logging
 **TELEGRAM_TOKEN** | string | Needed to send messages to telegram bot api
 **TABLE_QUOTES** | string | Specifies in which table quotes are stored
-**TYRANTS** | string | List of names of tyrants to include in search. Comma separated
+**AUTHOR_CLASS** | string | Class specifying what kind of authors are pooled, like "dictator"
 
 ## Activate webook
 
@@ -25,7 +25,7 @@ Variable name | Value | Note
 curl --data "url=<INVOKE_URL>" "https://api.telegram.org/bot<ACCESS_TOKEN>/setWebhook"
 ```
 
-INVOKE_URL = Api endpoint where to send event (AWS Lambda API address)
+INVOKE_URL = Api endpoint where to send event (AWS Lambda API address)<br />
 ACCESS_TOKEN = Telegram access token of bot
 
 Result will be something like:
