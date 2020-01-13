@@ -1,0 +1,26 @@
+{
+  "name": "tyrannobot",
+  "version": "1.0.0",
+  "description": "Bot for tyrant quotes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@personal:Karvaporsas/tyrannobot.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "tyrant",
+    "dictator"
+  ],
+  "author": "Touko Hjelt",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.601.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  }
+}
