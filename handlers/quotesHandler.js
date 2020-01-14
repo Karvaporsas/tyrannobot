@@ -8,6 +8,8 @@ const AUTHOR_CLASS = process.env.AUTHOR_CLASS || 'dictator';
 const USE_LOCAL_STORAGE = process.env.USE_LOCAL_STORAGE === 'ON';
 const DEBUG_MODE = process.env.DEBUG_MODE === 'ON';
 const localQuotes = require('./../resources/quotes.json');
+const SUPRESSED_USERS = process.env.SUPRESSED_USERS;
+const _supressionTreshold = 0.1;
 
 function _getRandomQuote(authorKeys) {
     const idx = Math.floor(Math.random() * authorKeys.length);
@@ -15,9 +17,21 @@ function _getRandomQuote(authorKeys) {
 }
 
 module.exports = {
-    getQuote(args, resolve, reject) {
+    getQuote(args, userId, resolve, reject) {
         if (DEBUG_MODE) {
             console.log('Fetching quote. USE_LOCAL_STORAGE is ' + USE_LOCAL_STORAGE);
+        }
+        if (SUPRESSED_USERS) {
+            var supressedUsers = SUPRESSED_USERS.split(',');
+            var supress = false;
+            for (const userString of supressedUsers) {
+                if (parseInt(userString) === userId) supress = true;
+            }
+
+            if (supress && Math.random() > _supressionTreshold) {
+                resolve({status: 0, message: 'Message supressed'});
+                return;
+            }
         }
         if (USE_LOCAL_STORAGE) {
             var quote = _getRandomQuote(localQuotes.quotes);

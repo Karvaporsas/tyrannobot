@@ -50,7 +50,13 @@ module.exports = {
 
         return message;
     },
+    getEventUserId(event) {
+        var userId = 0;
 
+        if (event.body.message && event.body.message.from) userId = event.body.message.from.id;
+
+        return userId;
+    },
     /**
      * Creates list type message to show to user
      * @param {string} title of message

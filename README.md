@@ -19,6 +19,7 @@ Variable name | Value | Note
 **TABLE_QUOTES** | string | Specifies in which table quotes are stored
 **AUTHOR_CLASS** | string | Class specifying what kind of authors are pooled, like "dictator"
 **USE_LOCAL_STORAGE** | ON / OFF | Determines if quotes are to be fetched from local json-file or from a database
+***SUPRESSED_USERS** | string | Comma separated string of telegram users whose commands are supressed by a ratio
 
 ## Activate webook
 

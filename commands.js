@@ -39,16 +39,17 @@ module.exports = {
                 reject();
             } else {
                 const messageText = helper.getEventMessageText(event);
-                    const command = helper.parseCommand(messageText);
+                const command = helper.parseCommand(messageText);
+                const userId = helper.getEventUserId(event);
 
-                    switch (command.name) {
-                        case 'speak':
-                            quotesHandler.getQuote(command.args, resolve, reject);
-                            break;
-                        default:
-                            resolve({status: 0, message: 'Not a command'});
-                            break;
-                    }
+                switch (command.name) {
+                    case 'speak':
+                        quotesHandler.getQuote(command.args, userId, resolve, reject);
+                        break;
+                    default:
+                        resolve({status: 0, message: 'Not a command'});
+                        break;
+                }
             }
         });
     }
