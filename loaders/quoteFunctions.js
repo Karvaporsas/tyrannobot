@@ -130,5 +130,61 @@ module.exports = {
                 }
             });
         });
+    },
+    getQuoteById(dynamoDb, id) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                FilterExpression: '#id = :id',
+                ExpressionAttributeNames: {
+                    '#id': 'id'
+                },
+                ExpressionAttributeValues: {
+                    ':id': id
+                }
+            };
+
+            utils.performScan(dynamoDb, params).then((quotes) => {
+                if (quotes && quotes.length === 1) {
+                    resolve(quotes[0]);
+                } else {
+                    reject('No quote found or multiple found with same id');
+                }
+            }).catch((e) => {
+                console.log('Error querying quote by id');
+                console.log(e);
+                reject(e);
+            });
+        });
+    },
+    updateQuoteReactions(dynamoDb, quote) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                Key: {
+                    author: quote.author,
+                    id: quote.id
+                },
+                UpdateExpression: 'set #likes = :likes, #dislikes = :dislikes',
+                ExpressionAttributeNames: {
+                    '#likes': 'likes',
+                    '#dislikes': 'dislikes'
+                },
+                ExpressionAttributeValues: {
+                    ':likes': quote.likes,
+                    ':dislikes': quote.dislikes
+                }
+            };
+
+            dynamoDb.update(params, function (err, data) {
+                if (err) {
+                    console.log('Error updating quote reactions');
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(quote);
+                }
+            });
+        });
     }
 };

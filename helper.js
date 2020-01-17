@@ -11,6 +11,52 @@ function getIndentedColMessage(message, maxLength) {
  * Helper
  */
 module.exports = {
+    getFeedBackKeyboard(command, id) {
+        var keyboardButtons = [];
+        var commandString = `${command},${id}`;
+
+        keyboardButtons.push({callback_data: commandString + ',up', text: '\uD83D\uDC4D'});
+        keyboardButtons.push({callback_data: commandString + ',down', text: '\uD83D\uDC4E'});
+
+        return keyboardButtons;
+    },
+    createKeyboardLayout(keys, columnAmount) {
+        var keyboard = [];
+        var col = 0;
+        var row = 0;
+        for (let i = 0; i < keys.length; i++) {
+            if (col === 0) keyboard.push([]);
+            keyboard[row].push(keys[i]);
+
+            if (col === (columnAmount - 1)) row++;
+            col = (col + 1) % columnAmount;
+        }
+
+        return keyboard;
+    },
+    isCallback(event) {
+        if (!event.body.message && event.body.callback_query) return true;
+        return false;
+    },
+    getCallbackData(event) {
+        var result = "";
+
+        if (event.body.callback_query) result = event.body.callback_query.data;
+
+        return result;
+    },
+    parseCallbackData(dataString) {
+        if (!dataString || !dataString.trim()) return [];
+
+        return dataString.split(',');
+    },
+    getCallbackId(event) {
+        var id = null;
+
+        if (event.body.callback_query) id = event.body.callback_query.id;
+
+        return id;
+    },
     parseCommand(message) {
         const tokens = message.split(' ');
         if (!tokens[0].match(/^\//)) {

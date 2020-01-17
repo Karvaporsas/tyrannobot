@@ -4,7 +4,9 @@
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const DEBUG_MODE = process.env.DEBUG_MODE === 'ON';
+const helper = require('./helper');
 const rp = require('request-promise');
+const _keyboard_cols = 2;
 
 module.exports = {
     sendMessageToTelegram(chatId, messageObject) {
@@ -28,10 +30,23 @@ module.exports = {
                 form.photo = messageObject.photo;
                 form.caption = messageObject.caption;
                 break;
+                case 'callback':
+                    method = 'answerCallbackQuery';
+                    delete form.chat_id;
+                    form.callback_query_id = messageObject.callbackId;
+                    form.text = messageObject.message;
+                    break;
             default:
                 console.error(`Tried to send message with unknown type ${messageObject.type}`);
                 return;
         }
+
+        if(messageObject.keyboard) {
+            form.reply_markup = JSON.stringify({
+                inline_keyboard: helper.createKeyboardLayout(messageObject.keyboard, _keyboard_cols),
+            });
+        }
+
         var url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
         var message = {
             method: 'POST',

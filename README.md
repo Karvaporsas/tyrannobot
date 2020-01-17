@@ -21,6 +21,7 @@ Variable name | Value | Note
 **AUTHOR_MAP** | string | Mapping defining a single author and all it's name variations
 **USE_LOCAL_STORAGE** | ON / OFF | Determines if quotes are to be fetched from local json-file or from a database
 ***SUPRESSED_USERS** | string | Comma separated string of telegram users whose commands are supressed by a ratio
+**ASK_FEEDBACK** | ON / OFF | If active, will send inline keyboard with thumbs up or down and collect likes and dislikes
 
 ## Activate webook
 

@@ -11,6 +11,7 @@ const DEBUG_MODE = process.env.DEBUG_MODE === 'ON';
 const localQuotes = require('./../resources/quotes.json');
 const SUPRESSED_USERS = process.env.SUPRESSED_USERS;
 const _supressionTreshold = 0.1;
+const ASK_FEEDBACK = process.env.ASK_FEEDBACK === 'ON';
 
 function _getRandomQuote(authorKeys) {
     const idx = Math.floor(Math.random() * authorKeys.length);
@@ -52,7 +53,13 @@ module.exports = {
             Promise.all(promises).then((resultArray) => {
                 var quoteInfo = _getRandomQuote(resultArray[0]);
                 database.getQuote(quoteInfo.id, quoteInfo.author).then((quote) => {
-                    resolve({status: 1, type: 'text', message: helper.formatMessage('', quote.quote, quote.author)});
+                    var response = {status: 1, type: 'text', message: helper.formatMessage('', quote.quote, quote.author)};
+
+                    if (ASK_FEEDBACK) {
+                        response.keyboard = helper.getFeedBackKeyboard('quote', quoteInfo.id);
+                    }
+
+                    resolve(response);
                 }).catch((e) => {
                     reject(e);
                 });
@@ -60,5 +67,28 @@ module.exports = {
                 reject(e);
             });
         }
+    },
+    handleQuoteFeedBack(callbackId, data, resolve, reject) {
+        database.getQuoteById(data[0]).then((quote) => {
+            var likes = quote.likes || 0;
+            var dislikes = quote.dislikes || 0;
+            const reaction = data[1];
+
+            if (reaction === 'up') {
+                likes++;
+            } else if (reaction === 'down') {
+                dislikes++;
+            }
+            quote.likes = likes;
+            quote.dislikes = dislikes;
+
+            database.updateQuoteReactions(quote).then(() => {
+                resolve({status: 1, callbackId: callbackId, type: 'callback', message: ''});
+            }).catch((e) => {
+                reject(e);
+            });
+        }).catch((e) => {
+            reject(e);
+        });
     }
 };

@@ -34,6 +34,22 @@ module.exports = {
      */
     processCommand(event, chatId) {
         return new Promise((resolve, reject) => {
+            if (helper.isCallback(event)) {
+                var data = helper.parseCallbackData(helper.getCallbackData(event));
+                const callbackId = helper.getCallbackId(event);
+                var first = data.shift();
+
+                switch (first) {
+                    case 'quote':
+                        quotesHandler.handleQuoteFeedBack(callbackId, data, resolve, reject);
+                        break;
+                    default:
+                        resolve({status: 0, message: 'No such handler'});
+                        break;
+                }
+
+                return;
+            }
             if (!chatId) {
                 console.error("No chat id!");
                 reject();
