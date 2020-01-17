@@ -13,6 +13,9 @@ module.exports = {
     getQuoteKeysByClass(authorClass) {
         return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass);
     },
+    getQuoteKeysByMap(authorMap) {
+        return quoteFunctions.getQuoteKeysByMap(dynamoDb, authorMap);
+    },
     getQuote(id, author) {
         return quoteFunctions.getQuote(dynamoDb, id, author);
     }

@@ -26,6 +26,31 @@ module.exports = {
             });
         });
     },
+    getQuoteKeysByMap(dynamoDb, authorMap) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                ProjectionExpression: '#id, #author',
+                FilterExpression: '#telegram_author_mapping = :telegram_author_mapping',
+                ExpressionAttributeNames: {
+                    '#id': 'id',
+                    '#author': 'author',
+                    '#telegram_author_mapping': 'telegram_author_mapping'
+                },
+                ExpressionAttributeValues: {
+                    ':telegram_author_mapping': authorMap
+                }
+            };
+
+            utils.performScan(dynamoDb, params).then((quoteKeys) => {
+                resolve(quoteKeys);
+            }).catch((e) => {
+                console.log('Error scannin quotes by map');
+                console.log(e);
+                reject(e);
+            });
+        });
+    },
     getQuoteKeysByClass(dynamoDb, authorClass) {
         return new Promise((resolve, reject) => {
             var params = {
