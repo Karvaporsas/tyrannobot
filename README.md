@@ -39,4 +39,4 @@ Result will be something like:
 
 ## Commands
 
-/speak - Bot quotes a tyrant
+/speak - Bot quotes an author
