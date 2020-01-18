@@ -8,8 +8,8 @@
     "clean": "del tyrannobotcore.zip",
     "build": "7z a tyrannobotcore.zip loaders resources handlers *.js",
     "tdeploy": "aws lambda update-function-code --function-name TyrannoBot --zip-file fileb://tyrannobotcore.zip --publish",
-    "tyrannodeploy": "npm run clean && npm run build && npm run tdeploy",
     "jdeploy": "aws lambda update-function-code --function-name JordanPeterBot --zip-file fileb://tyrannobotcore.zip --publish",
+    "tyrannodeploy": "npm run clean && npm run build && npm run tdeploy",
     "jordandeploy": "npm run clean && npm run build && npm run jdeploy"
   },
   "repository": {
