@@ -14,8 +14,9 @@ module.exports = {
         var form = {
             chat_id: chatId
         };
-        console.log("Constructing message");
+
         if (DEBUG_MODE) {
+            console.log("Constructing message");
             console.log(messageObject);
         }
 
@@ -30,12 +31,12 @@ module.exports = {
                 form.photo = messageObject.photo;
                 form.caption = messageObject.caption;
                 break;
-                case 'callback':
-                    method = 'answerCallbackQuery';
-                    delete form.chat_id;
-                    form.callback_query_id = messageObject.callbackId;
-                    form.text = messageObject.message;
-                    break;
+            case 'callback':
+                method = 'answerCallbackQuery';
+                delete form.chat_id;
+                form.callback_query_id = messageObject.callbackId;
+                form.text = messageObject.message;
+                break;
             default:
                 console.error(`Tried to send message with unknown type ${messageObject.type}`);
                 return;

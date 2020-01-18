@@ -22,7 +22,7 @@ module.exports = {
     getQuoteById(id) {
         return quoteFunctions.getQuoteById(dynamoDb, id);
     },
-    updateQuoteReactions(quote) {
-        return quoteFunctions.updateQuoteReactions(dynamoDb, quote);
+    updateQuoteReactions(quote, mode) {
+        return quoteFunctions.updateQuoteReactions(dynamoDb, quote, mode);
     }
 };

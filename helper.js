@@ -171,5 +171,14 @@ module.exports = {
         }
 
         return message;
-    }
+    },
+    getCallbackChatId(event) {
+        var id = 0;
+
+        if (event.body.callback_query && event.body.callback_query.message && event.body.callback_query.message.chat) {
+            id = event.body.callback_query.message.chat.id;
+        }
+
+        return id;
+    },
 };

@@ -39,5 +39,9 @@ module.exports = {
 
             dynamoDb.scan(params, chatScan);
         });
+    },
+    modes: {
+        'speak': 'GETQUOTE',
+        'vet': 'VETTING'
     }
 };

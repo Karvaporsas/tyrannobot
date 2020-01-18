@@ -157,7 +157,7 @@ module.exports = {
             });
         });
     },
-    updateQuoteReactions(dynamoDb, quote) {
+    updateQuoteReactions(dynamoDb, quote, mode) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
@@ -175,6 +175,15 @@ module.exports = {
                     ':dislikes': quote.dislikes
                 }
             };
+            if (mode === utils.modes.vet) {
+                params.UpdateExpression = 'set #reviewed = :reviewed';
+                params.ExpressionAttributeNames = {
+                    '#reviewed': 'reviewed'
+                };
+                params.ExpressionAttributeValues = {
+                    ':reviewed': quote.reviewed
+                };
+            }
 
             dynamoDb.update(params, function (err, data) {
                 if (err) {

@@ -15,6 +15,8 @@ npm install --save aws-sdk request request-promise
 Variable name | Value | Note
 --- | --- | ---
 **DEBUG_MODE** | ON / OFF | Increases amount of logging
+**VETTING_MODE** | ON / OFF | Enables vetting ability
+**VETTING_GROUPS** | string | Comma separated string of telegram groups that are allowed to review quotes. If not set, everyone is allowed.
 **TELEGRAM_TOKEN** | string | Needed to send messages to telegram bot api
 **TABLE_QUOTES** | string | Specifies in which table quotes are stored
 **AUTHOR_CLASS** | string | Class specifying what kind of authors are pooled, like "dictator"
@@ -41,3 +43,4 @@ Result will be something like:
 ## Commands
 
 /speak - Bot quotes an author
+/vet - User can review random quote

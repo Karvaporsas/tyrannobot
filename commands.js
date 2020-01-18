@@ -4,6 +4,7 @@
 
 const helper = require('./helper');
 const quotesHandler = require('./handlers/quotesHandler');
+const utils = require('./utils');
 
 /**
  * Commands
@@ -38,13 +39,15 @@ module.exports = {
                 var data = helper.parseCallbackData(helper.getCallbackData(event));
                 const callbackId = helper.getCallbackId(event);
                 var first = data.shift();
+                const callbackChatId = helper.getCallbackChatId(event);
 
                 switch (first) {
-                    case 'quote':
-                        quotesHandler.handleQuoteFeedBack(callbackId, data, resolve, reject);
+                    case utils.modes.vet:
+                    case utils.modes.speak:
+                        quotesHandler.handleQuoteFeedBack(callbackId, first, callbackChatId, data, resolve, reject);
                         break;
                     default:
-                        resolve({status: 0, message: 'No such handler'});
+                        resolve({status: 0, message: `No such handler: ${first}`});
                         break;
                 }
 
@@ -59,8 +62,9 @@ module.exports = {
                 const userId = helper.getEventUserId(event);
 
                 switch (command.name) {
+                    case 'vet':
                     case 'speak':
-                        quotesHandler.getQuote(command.args, userId, resolve, reject);
+                        quotesHandler.getQuote(command.args, utils.modes[command.name], chatId, userId, resolve, reject);
                         break;
                     default:
                         resolve({status: 0, message: 'Not a command'});
