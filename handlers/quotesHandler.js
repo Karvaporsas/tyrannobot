@@ -61,9 +61,9 @@ module.exports = {
             var promises = [];
 
             if (AUTHOR_CLASS) {
-                promises.push(database.getQuoteKeysByClass(AUTHOR_CLASS));
+                promises.push(database.getQuoteKeysByClass(AUTHOR_CLASS, mode));
             } else if (AUTHOR_MAP) {
-                promises.push(database.getQuoteKeysByMap(AUTHOR_MAP));
+                promises.push(database.getQuoteKeysByMap(AUTHOR_MAP, mode));
             } else {
                 reject('No author identification method given');
             }

@@ -10,11 +10,11 @@ module.exports = {
     getQuoteKeys(authors) {
         return quoteFunctions.getQuoteKeys(dynamoDb, authors);
     },
-    getQuoteKeysByClass(authorClass) {
-        return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass);
+    getQuoteKeysByClass(authorClass, mode) {
+        return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass, mode);
     },
-    getQuoteKeysByMap(authorMap) {
-        return quoteFunctions.getQuoteKeysByMap(dynamoDb, authorMap);
+    getQuoteKeysByMap(authorMap, mode) {
+        return quoteFunctions.getQuoteKeysByMap(dynamoDb, authorMap, mode);
     },
     getQuote(id, author) {
         return quoteFunctions.getQuote(dynamoDb, id, author);

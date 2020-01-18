@@ -26,7 +26,7 @@ module.exports = {
             });
         });
     },
-    getQuoteKeysByMap(dynamoDb, authorMap) {
+    getQuoteKeysByMap(dynamoDb, authorMap, mode) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
@@ -41,6 +41,13 @@ module.exports = {
                     ':telegram_author_mapping': authorMap
                 }
             };
+
+            if (mode === utils.modes.vet) {
+                params.FilterExpression += ' and (#reviewed <> :success or #reviewed <> :failure)';
+                params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
+                params.ExpressionAttributeValues[':success'] = 1;
+                params.ExpressionAttributeValues[':failure'] = -1;
+            }
 
             utils.performScan(dynamoDb, params).then((quoteKeys) => {
                 resolve(quoteKeys);
