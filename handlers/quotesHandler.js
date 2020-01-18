@@ -26,7 +26,12 @@ module.exports = {
         if (DEBUG_MODE) {
             console.log('Fetching quote. USE_LOCAL_STORAGE is ' + USE_LOCAL_STORAGE);
         }
-        if (VETTING_MODE && mode == utils.modes.vet && VETTING_GROUPS.length) {
+        if (!VETTING_MODE && mode === utils.modes.vet) {
+            resolve({status: 0, message: `Vet mode not activated`});
+            return;
+        }
+
+        if (mode == utils.modes.vet && VETTING_GROUPS.length) {
             var allowedGroups = VETTING_GROUPS.split(',');
             if (allowedGroups.length) {
                 var isAllowed = false;
@@ -71,7 +76,7 @@ module.exports = {
             Promise.all(promises).then((resultArray) => {
                 var quoteInfo = _getRandomQuote(resultArray[0]);
                 database.getQuote(quoteInfo.id, quoteInfo.author).then((quote) => {
-                    var response = {status: 1, type: 'text', message: helper.formatMessage('', quote.quote, quote.author)};
+                    var response = {status: 1, type: 'text', message: helper.formatMessage((mode === utils.modes.vet ? quote.id : ''), quote.quote, quote.author)};
 
                     if (ASK_FEEDBACK) {
                         response.keyboard = helper.getFeedBackKeyboard(mode, quoteInfo.id);

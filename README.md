@@ -42,5 +42,5 @@ Result will be something like:
 
 ## Commands
 
-/speak - Bot quotes an author
+/speak - Bot quotes an author <br />
 /vet - User can review random quote
