@@ -83,7 +83,7 @@ module.exports = {
             quote.dislikes = dislikes;
 
             database.updateQuoteReactions(quote).then(() => {
-                resolve({status: 1, callbackId: callbackId, type: 'callback', message: ''});
+                resolve({status: 1, callbackId: callbackId, type: 'callback', message: 'Thanks for the feedback!'});
             }).catch((e) => {
                 reject(e);
             });
