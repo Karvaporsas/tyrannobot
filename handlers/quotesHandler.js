@@ -21,6 +21,27 @@ function _getRandomQuote(authorKeys) {
     return authorKeys[idx];
 }
 
+function _capitalizeFirstWord(s) {
+    var result = '';
+    console.log('missä mättää');
+    console.log(s);
+    console.log(typeof s);
+    s = s.toString();
+
+    if (!s || !s.length) {
+        return result;
+    }
+
+    result = s.charAt(0);
+    result = result.toUpperCase();
+
+    if (s.length > 1) {
+        result += s.substr(1);
+    }
+
+    return result;
+}
+
 module.exports = {
     getQuote(args, mode, chatId, userId, resolve, reject) {
         if (DEBUG_MODE) {
@@ -76,7 +97,14 @@ module.exports = {
             Promise.all(promises).then((resultArray) => {
                 var quoteInfo = _getRandomQuote(resultArray[0]);
                 database.getQuote(quoteInfo.id, quoteInfo.author).then((quote) => {
-                    var response = {status: 1, type: 'text', message: helper.formatMessage((mode === utils.modes.vet ? quote.id : ''), quote.quote, quote.author)};
+                    var response = {
+                        status: 1,
+                        type: 'text',
+                        message: helper.formatMessage(
+                            (mode === utils.modes.vet ? quote.id : ''),
+                            _capitalizeFirstWord(quote.quote),
+                            quote.author)
+                    };
 
                     if (ASK_FEEDBACK) {
                         response.keyboard = helper.getFeedBackKeyboard(mode, quoteInfo.id);
