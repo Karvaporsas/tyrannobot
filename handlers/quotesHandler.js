@@ -23,9 +23,6 @@ function _getRandomQuote(authorKeys) {
 
 function _capitalizeFirstWord(s) {
     var result = '';
-    console.log('missä mättää');
-    console.log(s);
-    console.log(typeof s);
     s = s.toString();
 
     if (!s || !s.length) {
