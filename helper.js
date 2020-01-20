@@ -2,6 +2,8 @@
 /*jshint esversion: 6 */
 'use strict';
 
+const utils = require('./utils');
+
 function getIndentedColMessage(message, maxLength) {
     const countValue = maxLength + 1 - message.toString().length;
     return '' + message + (' ').repeat(countValue);
@@ -15,8 +17,8 @@ module.exports = {
         var keyboardButtons = [];
         var commandString = `${command},${id}`;
 
-        keyboardButtons.push({callback_data: commandString + ',up', text: '\uD83D\uDC4D'});
-        keyboardButtons.push({callback_data: commandString + ',down', text: '\uD83D\uDC4E'});
+        keyboardButtons.push({callback_data: commandString + ',up', text: (command === utils.modes.vet ? '\u2714\ufe0f' : '\uD83D\uDC4D')});
+        keyboardButtons.push({callback_data: commandString + ',down', text: (command === utils.modes.vet ? '\u274c' : '\uD83D\uDC4E')});
 
         return keyboardButtons;
     },

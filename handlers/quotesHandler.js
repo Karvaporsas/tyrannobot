@@ -103,7 +103,7 @@ module.exports = {
                             quote.author)
                     };
 
-                    if (ASK_FEEDBACK) {
+                    if (ASK_FEEDBACK || VETTING_MODE) {
                         response.keyboard = helper.getFeedBackKeyboard(mode, quoteInfo.id);
                     }
 
