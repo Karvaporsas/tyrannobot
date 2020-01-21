@@ -16,6 +16,9 @@ module.exports = {
     getQuote(id, author) {
         return quoteFunctions.getQuote(dynamoDb, id, author);
     },
+    getQuoteById(id) {
+        return quoteFunctions.getQuoteById(dynamoDb, id);
+    },
     updateQuoteReactions(quote, mode) {
         return quoteFunctions.updateQuoteReactions(dynamoDb, quote, mode);
     }

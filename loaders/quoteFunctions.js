@@ -5,6 +5,7 @@
 const T_QUOTES = process.env.TABLE_QUOTES;
 const AUTHOR_MAP_INDEX = process.env.AUTHOR_MAP_INDEX;
 const AUTHOR_CLASS_INDEX = process.env.AUTHOR_CLASS_INDEX;
+const ID_INDEX = process.env.ID_INDEX;
 const utils = require('./../utils');
 
 module.exports = {
@@ -121,6 +122,36 @@ module.exports = {
                         resolve(result.Item);
                     } else {
                         reject();
+                    }
+                }
+            });
+        });
+    },
+    getQuoteById(dynamoDb, id) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                IndexName: ID_INDEX,
+                KeyConditionExpression: '#id = :id',
+                ExpressionAttributeNames: {
+                    '#id': 'id'
+                },
+                ExpressionAttributeValues: {
+                    ':id': id
+                }
+            };
+
+            dynamoDb.query(params, function(err, data) {
+                if (err) {
+                   console.log(`Error querying quote by id ${id}`);
+                   console.log(err);
+                   reject(err);
+                } else {
+                    var quotes = data.Items;
+                    if (quotes && quotes.length === 1) {
+                        resolve(quotes[0]);
+                    } else {
+                        reject('No quote found or multiple found with same id');
                     }
                 }
             });
