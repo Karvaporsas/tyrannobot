@@ -7,9 +7,6 @@ const quoteFunctions = require('./loaders/quoteFunctions');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports = {
-    getQuoteKeys(authors) {
-        return quoteFunctions.getQuoteKeys(dynamoDb, authors);
-    },
     getQuoteKeysByClass(authorClass, mode) {
         return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass, mode);
     },
@@ -18,9 +15,6 @@ module.exports = {
     },
     getQuote(id, author) {
         return quoteFunctions.getQuote(dynamoDb, id, author);
-    },
-    getQuoteById(id) {
-        return quoteFunctions.getQuoteById(dynamoDb, id);
     },
     updateQuoteReactions(quote, mode) {
         return quoteFunctions.updateQuoteReactions(dynamoDb, quote, mode);

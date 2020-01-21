@@ -3,39 +3,22 @@
 'use strict';
 
 const T_QUOTES = process.env.TABLE_QUOTES;
+const AUTHOR_MAP_INDEX = process.env.AUTHOR_MAP_INDEX;
+const AUTHOR_CLASS_INDEX = process.env.AUTHOR_CLASS_INDEX;
 const utils = require('./../utils');
 
 module.exports = {
-    getQuoteKeys(dynamoDb, authors) {
-        return new Promise((resolve, reject) => {
-            var promises = [];
-            for (const author of authors) {
-                promises.push(this.getAuthorKeys(dynamoDb, author));
-            }
-
-            Promise.all(promises).then((allResults) => {
-                var allKeys = [];
-                for (const authorKeys of allResults) {
-                    allKeys = allKeys.concat(authorKeys);
-                }
-                resolve(allKeys);
-            }).catch((e) => {
-                console.log('Error getting quote keys');
-                console.log(e);
-                reject(e);
-            });
-        });
-    },
     getQuoteKeysByMap(dynamoDb, authorMap, mode) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
+                IndexName: AUTHOR_MAP_INDEX,
+                KeyConditionExpression: '#telegram_author_mapping = :telegram_author_mapping',
                 ProjectionExpression: '#id, #author',
-                FilterExpression: '#telegram_author_mapping = :telegram_author_mapping',
                 ExpressionAttributeNames: {
+                    '#telegram_author_mapping': 'telegram_author_mapping',
                     '#id': 'id',
-                    '#author': 'author',
-                    '#telegram_author_mapping': 'telegram_author_mapping'
+                    '#author': 'author'
                 },
                 ExpressionAttributeValues: {
                     ':telegram_author_mapping': authorMap
@@ -43,18 +26,20 @@ module.exports = {
             };
 
             if (mode === utils.modes.vet) {
-                params.FilterExpression += ' and (#reviewed <> :success or #reviewed <> :failure)';
+                params.FilterExpression = '#reviewed <> :success or #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
                 params.ExpressionAttributeValues[':failure'] = -1;
             }
 
-            utils.performScan(dynamoDb, params).then((quoteKeys) => {
-                resolve(quoteKeys);
-            }).catch((e) => {
-                console.log('Error scannin quotes by map');
-                console.log(e);
-                reject(e);
+            dynamoDb.query(params, function(err, data) {
+                if (err) {
+                    console.log('Error querying quotes by map ' + authorMap);
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(data.Items);
+                }
             });
         });
     },
@@ -62,8 +47,9 @@ module.exports = {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
+                IndexName: AUTHOR_CLASS_INDEX,
                 ProjectionExpression: '#id, #author',
-                FilterExpression: '#telegram_bot_category = :telegram_bot_category',
+                KeyConditionExpression: '#telegram_bot_category = :telegram_bot_category',
                 ExpressionAttributeNames: {
                     '#id': 'id',
                     '#author': 'author',
@@ -74,12 +60,14 @@ module.exports = {
                 }
             };
 
-            utils.performScan(dynamoDb, params).then((quoteKeys) => {
-                resolve(quoteKeys);
-            }).catch((e) => {
-                console.log('Error scanning quotes');
-                console.log(e);
-                reject(e);
+            dynamoDb.query(params, function (err, data) {
+                if (err) {
+                    console.log(`Error querying quote keys wiht class ${authorClass}`);
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(data.Items);
+                }
             });
         });
     },
@@ -135,32 +123,6 @@ module.exports = {
                         reject();
                     }
                 }
-            });
-        });
-    },
-    getQuoteById(dynamoDb, id) {
-        return new Promise((resolve, reject) => {
-            var params = {
-                TableName: T_QUOTES,
-                FilterExpression: '#id = :id',
-                ExpressionAttributeNames: {
-                    '#id': 'id'
-                },
-                ExpressionAttributeValues: {
-                    ':id': id
-                }
-            };
-
-            utils.performScan(dynamoDb, params).then((quotes) => {
-                if (quotes && quotes.length === 1) {
-                    resolve(quotes[0]);
-                } else {
-                    reject('No quote found or multiple found with same id');
-                }
-            }).catch((e) => {
-                console.log('Error querying quote by id');
-                console.log(e);
-                reject(e);
             });
         });
     },
