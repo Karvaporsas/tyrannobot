@@ -9,8 +9,10 @@
     "build": "7z a tyrannobotcore.zip loaders resources handlers *.js",
     "tdeploy": "aws lambda update-function-code --function-name TyrannoBot --zip-file fileb://tyrannobotcore.zip --publish",
     "jdeploy": "aws lambda update-function-code --function-name JordanPeterBot --zip-file fileb://tyrannobotcore.zip --publish",
+    "vdeploy": "aws lambda update-function-code --function-name Vitsibotti --zip-file fileb://tyrannobotcore.zip --publish",
     "tyrannodeploy": "npm run clean && npm run build && npm run tdeploy",
-    "jordandeploy": "npm run clean && npm run build && npm run jdeploy"
+    "jordandeploy": "npm run clean && npm run build && npm run jdeploy",
+    "vitsideploy": "npm run clean && npm run build && npm run vdeploy"
   },
   "repository": {
     "type": "git",

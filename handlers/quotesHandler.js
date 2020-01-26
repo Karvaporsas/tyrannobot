@@ -92,6 +92,10 @@ module.exports = {
             }
 
             Promise.all(promises).then((resultArray) => {
+                if (!resultArray[0] || !resultArray[0].length) {
+                    reject('No quotes that match search criteria');
+                    return;
+                }
                 var quoteInfo = _getRandomQuote(resultArray[0]);
                 database.getQuote(quoteInfo.id, quoteInfo.author).then((quote) => {
                     var response = {
