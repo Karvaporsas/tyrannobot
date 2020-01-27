@@ -28,7 +28,7 @@ module.exports = {
             };
 
             if (mode === utils.modes.vet) {
-                params.FilterExpression = '#reviewed <> :success or #reviewed <> :failure';
+                params.FilterExpression = '#reviewed <> :success and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
                 params.ExpressionAttributeValues[':failure'] = -1;
