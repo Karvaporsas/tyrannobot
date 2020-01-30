@@ -10,9 +10,11 @@
     "tdeploy": "aws lambda update-function-code --function-name TyrannoBot --zip-file fileb://tyrannobotcore.zip --publish",
     "jdeploy": "aws lambda update-function-code --function-name JordanPeterBot --zip-file fileb://tyrannobotcore.zip --publish",
     "vdeploy": "aws lambda update-function-code --function-name Vitsibotti --zip-file fileb://tyrannobotcore.zip --publish",
+    "pdeploy": "aws lambda update-function-code --function-name PhilosopherBot --zip-file fileb://tyrannobotcore.zip --publish",
     "tyrannodeploy": "npm run clean && npm run build && npm run tdeploy",
     "jordandeploy": "npm run clean && npm run build && npm run jdeploy",
-    "vitsideploy": "npm run clean && npm run build && npm run vdeploy"
+    "vitsideploy": "npm run clean && npm run build && npm run vdeploy",
+    "philodeploy": "npm run clean && npm run build && npm run pdeploy"
   },
   "repository": {
     "type": "git",
