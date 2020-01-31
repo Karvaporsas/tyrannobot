@@ -54,7 +54,7 @@ module.exports = {
             });
         });
     },
-    getQuoteKeysByClass(dynamoDb, authorClass) {
+    getQuoteKeysByClass(dynamoDb, authorClass, mode) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
@@ -70,6 +70,21 @@ module.exports = {
                     ':telegram_bot_category': authorClass
                 }
             };
+
+            if (mode === utils.modes.vet) {
+                params.FilterExpression = '#reviewed <> :success and #reviewed <> :failure';
+                params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
+                params.ExpressionAttributeValues[':success'] = 1;
+                params.ExpressionAttributeValues[':failure'] = -1;
+            } else if (SHOW_ONLY_VETTED) {
+                params.FilterExpression = '#reviewed = :success';
+                params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
+                params.ExpressionAttributeValues[':success'] = 1;
+            } else if (DISABLE_DISCARDED) {
+                params.FilterExpression = '#reviewed <> :failure';
+                params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
+                params.ExpressionAttributeValues[':failure'] = -1;
+            }
 
             dynamoDb.query(params, function (err, data) {
                 if (err) {
