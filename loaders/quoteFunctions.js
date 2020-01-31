@@ -7,6 +7,7 @@ const AUTHOR_MAP_INDEX = process.env.AUTHOR_MAP_INDEX;
 const AUTHOR_CLASS_INDEX = process.env.AUTHOR_CLASS_INDEX;
 const ID_INDEX = process.env.ID_INDEX;
 const SHOW_ONLY_VETTED = process.env.SHOW_ONLY_VETTED === 'ON';
+const DISABLE_DISCARDED = process.env.DISABLE_DISCARDED === 'ON';
 const utils = require('./../utils');
 
 module.exports = {
@@ -36,6 +37,10 @@ module.exports = {
                 params.FilterExpression = '#reviewed = :success';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
+            } else if (DISABLE_DISCARDED) {
+                params.FilterExpression = '#reviewed <> :failure';
+                params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
+                params.ExpressionAttributeValues[':failure'] = -1;
             }
 
             dynamoDb.query(params, function(err, data) {
