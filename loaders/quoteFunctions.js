@@ -173,10 +173,29 @@ module.exports = {
                    reject(err);
                 } else {
                     var quotes = data.Items;
-                    if (quotes && quotes.length === 1) {
-                        resolve(quotes[0]);
+                    if (quotes && quotes.length) {
+                        var promises = [];
+
+                        if (quotes.length > 1) {
+                            for (const q of quotes) {
+                                q.isDuplicate = true;
+                                promises.push(this.updateIsQuoteDuplicate(dynamoDb, q));
+                            }
+                        } else {
+                            var promise = new Promise((ok, nok) => {
+                                ok();
+                            });
+
+                            promises.push(promise);
+                        }
+
+                        Promise.all(promises).then(() => {
+                            resolve(quotes[0]);
+                        }).catch((e) => {
+                            reject(e);
+                        });
                     } else {
-                        reject('No quote found or multiple found with same id');
+                        reject('No quote found ');
                     }
                 }
             });
@@ -217,6 +236,34 @@ module.exports = {
                     reject(err);
                 } else {
                     resolve(quote);
+                }
+            });
+        });
+    },
+    updateIsQuoteDuplicate(dynamoDb, quote) {
+        return new Promise((resolve, reject) => {
+            var params = {
+                TableName: T_QUOTES,
+                Key: {
+                    author: quote.author,
+                    id: quote.id
+                },
+                UpdateExpression: 'set #duplicate = :duplicate',
+                ExpressionAttributeNames: {
+                    '#duplicate': 'duplicate'
+                },
+                ExpressionAttributeValues: {
+                    ':duplicate': (quote.isDuplicate === true)
+                }
+            };
+
+            dynamoDb.update(params, function (err, data) {
+                if (err) {
+                    console.log(`Error updating quote duplicacy for quote ${quote.id}`);
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(data);
                 }
             });
         });
