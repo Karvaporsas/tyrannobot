@@ -154,6 +154,7 @@ module.exports = {
     },
     getQuoteById(dynamoDb, id) {
         return new Promise((resolve, reject) => {
+            var self = this;
             var params = {
                 TableName: T_QUOTES,
                 IndexName: ID_INDEX,
@@ -179,7 +180,7 @@ module.exports = {
                         if (quotes.length > 1) {
                             for (const q of quotes) {
                                 q.isDuplicate = true;
-                                promises.push(this.updateIsQuoteDuplicate(dynamoDb, q));
+                                promises.push(self.updateIsQuoteDuplicate(dynamoDb, q));
                             }
                         } else {
                             var promise = new Promise((ok, nok) => {
