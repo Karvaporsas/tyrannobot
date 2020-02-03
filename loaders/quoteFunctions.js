@@ -9,6 +9,7 @@ const ID_INDEX = process.env.ID_INDEX;
 const SHOW_ONLY_VETTED = process.env.SHOW_ONLY_VETTED === 'ON';
 const DISABLE_DISCARDED = process.env.DISABLE_DISCARDED === 'ON';
 const utils = require('./../utils');
+const MAX_LENGTH = 2000;
 
 module.exports = {
     getQuoteKeysByMap(dynamoDb, authorMap, mode) {
@@ -17,28 +18,31 @@ module.exports = {
                 TableName: T_QUOTES,
                 IndexName: AUTHOR_MAP_INDEX,
                 KeyConditionExpression: '#telegram_author_mapping = :telegram_author_mapping',
+                FilterExpression: '#length < :maxlength',
                 ProjectionExpression: '#id, #author',
                 ExpressionAttributeNames: {
                     '#telegram_author_mapping': 'telegram_author_mapping',
                     '#id': 'id',
-                    '#author': 'author'
+                    '#author': 'author',
+                    '#length': 'quote_length'
                 },
                 ExpressionAttributeValues: {
-                    ':telegram_author_mapping': authorMap
+                    ':telegram_author_mapping': authorMap,
+                    ':maxlength': MAX_LENGTH
                 }
             };
 
             if (mode === utils.modes.vet) {
-                params.FilterExpression = '#reviewed <> :success and #reviewed <> :failure';
+                params.FilterExpression += ' and #reviewed <> :success and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
                 params.ExpressionAttributeValues[':failure'] = -1;
             } else if (SHOW_ONLY_VETTED) {
-                params.FilterExpression = '#reviewed = :success';
+                params.FilterExpression += ' and #reviewed = :success';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
             } else if (DISABLE_DISCARDED) {
-                params.FilterExpression = '#reviewed <> :failure';
+                params.FilterExpression += ' and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':failure'] = -1;
             }
@@ -61,27 +65,30 @@ module.exports = {
                 IndexName: AUTHOR_CLASS_INDEX,
                 ProjectionExpression: '#id, #author',
                 KeyConditionExpression: '#telegram_bot_category = :telegram_bot_category',
+                FilterExpression: '#length < :maxlength',
                 ExpressionAttributeNames: {
                     '#id': 'id',
                     '#author': 'author',
-                    '#telegram_bot_category': 'telegram_bot_category'
+                    '#telegram_bot_category': 'telegram_bot_category',
+                    '#length': 'quote_length'
                 },
                 ExpressionAttributeValues: {
-                    ':telegram_bot_category': authorClass
+                    ':telegram_bot_category': authorClass,
+                    ':maxlength': MAX_LENGTH
                 }
             };
 
             if (mode === utils.modes.vet) {
-                params.FilterExpression = '#reviewed <> :success and #reviewed <> :failure';
+                params.FilterExpression += ' and #reviewed <> :success and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
                 params.ExpressionAttributeValues[':failure'] = -1;
             } else if (SHOW_ONLY_VETTED) {
-                params.FilterExpression = '#reviewed = :success';
+                params.FilterExpression = ' and #reviewed = :success';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
             } else if (DISABLE_DISCARDED) {
-                params.FilterExpression = '#reviewed <> :failure';
+                params.FilterExpression = ' and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':failure'] = -1;
             }
