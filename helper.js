@@ -183,4 +183,13 @@ module.exports = {
 
         return id;
     },
+    getCallbackUserId(event) {
+        var id = 0;
+
+        if (event.body.callback_query && event.body.callback_query.from) {
+            id = event.body.callback_query.from.id;
+        }
+
+        return id;
+    }
 };

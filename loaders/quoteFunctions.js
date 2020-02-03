@@ -221,12 +221,14 @@ module.exports = {
                 }
             };
             if (mode === utils.modes.vet) {
-                params.UpdateExpression = 'set #reviewed = :reviewed';
+                params.UpdateExpression = 'set #reviewed = :reviewed, #reviewer = :reviewer';
                 params.ExpressionAttributeNames = {
-                    '#reviewed': 'reviewed'
+                    '#reviewed': 'reviewed',
+                    '#reviewer': 'reviewer'
                 };
                 params.ExpressionAttributeValues = {
-                    ':reviewed': quote.reviewed
+                    ':reviewed': quote.reviewed,
+                    ':reviewer': quote.reviewer
                 };
             }
 

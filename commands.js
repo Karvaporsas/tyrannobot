@@ -40,11 +40,12 @@ module.exports = {
                 const callbackId = helper.getCallbackId(event);
                 var first = data.shift();
                 const callbackChatId = helper.getCallbackChatId(event);
+                const userId = helper.getCallbackUserId(event);
 
                 switch (first) {
                     case utils.modes.vet:
                     case utils.modes.speak:
-                        quotesHandler.handleQuoteFeedBack(callbackId, first, callbackChatId, data, resolve, reject);
+                        quotesHandler.handleQuoteFeedBack(callbackId, first, callbackChatId, userId, data, resolve, reject);
                         break;
                     default:
                         resolve({status: 0, message: `No such handler: ${first}`});

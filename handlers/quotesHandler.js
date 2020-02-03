@@ -120,7 +120,7 @@ module.exports = {
             });
         }
     },
-    handleQuoteFeedBack(callbackId, mode, chatId, data, resolve, reject) {
+    handleQuoteFeedBack(callbackId, mode, chatId, userId, data, resolve, reject) {
         if (VETTING_MODE && mode == utils.modes.vet) {
             var allowedGroups = VETTING_GROUPS.split(',');
             if (allowedGroups.length) {
@@ -156,6 +156,7 @@ module.exports = {
             quote.likes = likes;
             quote.dislikes = dislikes;
             quote.reviewed = reviewResult;
+            quote.reviewer = userId;
 
             database.updateQuoteReactions(quote, mode).then(() => {
                 resolve({status: 1, callbackId: callbackId, type: 'callback', message: 'Thanks for the feedback!'});
