@@ -84,11 +84,11 @@ module.exports = {
                 params.ExpressionAttributeValues[':success'] = 1;
                 params.ExpressionAttributeValues[':failure'] = -1;
             } else if (SHOW_ONLY_VETTED) {
-                params.FilterExpression = ' and #reviewed = :success';
+                params.FilterExpression += ' and #reviewed = :success';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':success'] = 1;
             } else if (DISABLE_DISCARDED) {
-                params.FilterExpression = ' and #reviewed <> :failure';
+                params.FilterExpression += ' and #reviewed <> :failure';
                 params.ExpressionAttributeNames['#reviewed'] = 'reviewed';
                 params.ExpressionAttributeValues[':failure'] = -1;
             }
