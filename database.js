@@ -7,11 +7,11 @@ const quoteFunctions = require('./loaders/quoteFunctions');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports = {
-    getQuoteKeysByClass(authorClass, mode) {
-        return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass, mode);
+    getQuoteKeysByClass(authorClass, mode, maxLen) {
+        return quoteFunctions.getQuoteKeysByClass(dynamoDb, authorClass, mode, maxLen);
     },
-    getQuoteKeysByMap(authorMap, mode) {
-        return quoteFunctions.getQuoteKeysByMap(dynamoDb, authorMap, mode);
+    getQuoteKeysByMap(authorMap, mode, maxLen) {
+        return quoteFunctions.getQuoteKeysByMap(dynamoDb, authorMap, mode, maxLen);
     },
     getQuote(id, author) {
         return quoteFunctions.getQuote(dynamoDb, id, author);

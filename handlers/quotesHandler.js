@@ -48,6 +48,14 @@ module.exports = {
             resolve({status: 0, message: `Vet mode not activated`});
             return;
         }
+        var maxLen = 0;
+
+        if (args[0]) {
+            var rawMax = parseInt(args[0]);
+            if (rawMax) {
+                maxLen = rawMax;
+            }
+        }
 
         if (mode == utils.modes.vet && VETTING_GROUPS.length) {
             var allowedGroups = VETTING_GROUPS.split(',');
@@ -84,9 +92,9 @@ module.exports = {
             var promises = [];
 
             if (AUTHOR_CLASS) {
-                promises.push(database.getQuoteKeysByClass(AUTHOR_CLASS, mode));
+                promises.push(database.getQuoteKeysByClass(AUTHOR_CLASS, mode, maxLen));
             } else if (AUTHOR_MAP) {
-                promises.push(database.getQuoteKeysByMap(AUTHOR_MAP, mode));
+                promises.push(database.getQuoteKeysByMap(AUTHOR_MAP, mode, maxLen));
             } else {
                 reject('No author identification method given');
             }

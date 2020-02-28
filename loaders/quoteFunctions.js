@@ -12,7 +12,7 @@ const utils = require('./../utils');
 const MAX_LENGTH = 2000;
 
 module.exports = {
-    getQuoteKeysByMap(dynamoDb, authorMap, mode) {
+    getQuoteKeysByMap(dynamoDb, authorMap, mode, maxLen) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
@@ -28,7 +28,7 @@ module.exports = {
                 },
                 ExpressionAttributeValues: {
                     ':telegram_author_mapping': authorMap,
-                    ':maxlength': MAX_LENGTH
+                    ':maxlength': maxLen || MAX_LENGTH
                 }
             };
 
@@ -58,7 +58,7 @@ module.exports = {
             });
         });
     },
-    getQuoteKeysByClass(dynamoDb, authorClass, mode) {
+    getQuoteKeysByClass(dynamoDb, authorClass, mode, maxLen) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: T_QUOTES,
@@ -74,7 +74,7 @@ module.exports = {
                 },
                 ExpressionAttributeValues: {
                     ':telegram_bot_category': authorClass,
-                    ':maxlength': MAX_LENGTH
+                    ':maxlength': maxLen || MAX_LENGTH
                 }
             };
 
