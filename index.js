@@ -26,7 +26,6 @@ exports.handler = (event, context) => {
     }
 
     commands.processCommand(event, chatId).then((result) => {
-        console.log("Command handled properly");
         if (DEBUG_MODE) {
             console.log(result);
         }
